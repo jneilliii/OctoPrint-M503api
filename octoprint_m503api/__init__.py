@@ -43,6 +43,7 @@ class M503apiPlugin(
             return line
         if line.strip() == "m503_collection":
             self.collection_started = True
+            return line
         if line.startswith("ok"):
             self.collecting = False
             self.processing = False
