@@ -22,17 +22,16 @@ class M503apiPlugin(
         return {"M503": []}
 
     def on_api_get(self, request):
-        if request.args.get("M503"):
-            self.processing = True
-            self.M503_data = []
+        self.processing = True
+        self.M503_data = []
 
-            if not self._printer.is_operational():
-                return flask.jsonify({"error": "printer is busy or disconnected"})
+        if not self._printer.is_operational():
+            return flask.jsonify({"error": "printer is busy or disconnected"})
 
-            self._printer.commands("M503")
-            while self.processing:
-                time.sleep(5)
-            return flask.jsonify({"data": self.M503_data})
+        self._printer.commands("M503")
+        while self.processing:
+            time.sleep(5)
+        return flask.jsonify({"data": self.M503_data})
 
     ##~~ gcode received hook
 
