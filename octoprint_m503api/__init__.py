@@ -23,7 +23,7 @@ class M503apiPlugin(
         self.processing = True
         self.M503_data = []
 
-        if not self._printer.is_operational():
+        if not self._printer.is_ready():
             self.processing = False
             return flask.make_response("Printer Busy or Disconnected", 409)
         self._logger.info("running commands M118 m503_collection, M503")
