@@ -7,7 +7,9 @@ import flask
 import octoprint.plugin
 
 
-class M503apiPlugin(octoprint.plugin.SimpleApiPlugin):
+class M503apiPlugin(
+    octoprint.plugin.SimpleApiPlugin, octoprint.plugin.RestartNeedingPlugin
+):
     def __init__(self):
         self.processing = False
         self.collection_started = False
