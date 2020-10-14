@@ -26,7 +26,7 @@ class M503apiPlugin(
         if not self._printer.is_operational():
             self.processing = False
             return flask.make_response("Printer Busy or Disconnected", 409)
-
+        self._logger.info("running commands M118 m503_collection, M503")
         self._printer.commands(["M118 m503_collection", "M503"])
         while self.processing:
             time.sleep(1)
@@ -38,12 +38,12 @@ class M503apiPlugin(
         if not self.processing:
             return line
         self._logger.info(line.strip())
-        if self.collection_started and line.strip() == "ok":
+        if self.collection_started and line.startswith("ok"):
             self.collection_started = False
             return line
         if line.strip() == "m503_collection":
             self.collection_started = True
-        if line.strip() == "ok":
+        if line.startswith("ok"):
             self.collecting = False
             self.processing = False
             return line
@@ -55,7 +55,7 @@ class M503apiPlugin(
     def get_update_information(self):
         return {
             "m503api": {
-                "displayName": "M503api Plugin",
+                "displayName": "M503API",
                 "displayVersion": self._plugin_version,
                 # version check: github repository
                 "type": "github_release",
