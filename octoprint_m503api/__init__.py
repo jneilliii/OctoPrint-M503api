@@ -19,13 +19,14 @@ class M503apiPlugin(
     ##~~ SimpleApiPlugin mixin
 
     def on_api_get(self, request):
+        self._logger.info("received request")
         self.processing = True
         self.M503_data = []
 
         if not self._printer.is_operational():
             return flask.make_response("Printer Busy or Disconnected", 409)
 
-        self._printer.commands("M503")
+        self._printer.commands(["M118 m503_collection", "M503"])
         while self.processing:
             time.sleep(1)
         return flask.jsonify(data=self.M503_data)
