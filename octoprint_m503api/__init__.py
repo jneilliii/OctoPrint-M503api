@@ -24,6 +24,7 @@ class M503apiPlugin(
         self.M503_data = []
 
         if not self._printer.is_operational():
+            self.processing = False
             return flask.make_response("Printer Busy or Disconnected", 409)
 
         self._printer.commands(["M118 m503_collection", "M503"])
@@ -36,6 +37,7 @@ class M503apiPlugin(
     def process_gcode(self, comm, line, *args, **kwargs):
         if not self.processing:
             return line
+        self._logger.info(line.strip())
         if self.collection_started and line.strip() == "ok":
             self.collection_started = False
             return line
